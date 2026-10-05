@@ -6,7 +6,7 @@
     <meta name="description" content="IEEE Day 2026 - Pradyut Parva 3 Event Navigation">
     <meta name="theme-color" content="#0A1628">
     <title>IEEE Day 2026 - Pradyut Parva 3 | Event Navigation</title>
-    <link rel="stylesheet" href="styles.css?v=21">
+    <link rel="stylesheet" href="styles.css?v=24">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -132,15 +132,11 @@
         </div>
 
         <div class="container">
-            <div class="location-banner-bar">
-                <span id="currentLocationText">📍 Location: Not set yet</span>
-                <button class="change-location-btn" onclick="changeLocation()">Change</button>
-            </div>
-
             <div class="search-filter-bar">
                 <div class="search-input-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="eventSearch" placeholder="Search events by title, room, or dept..." oninput="filterEvents()">
+                    <input type="text" id="eventSearch" placeholder="Search by event name, room, or department..." oninput="filterEvents()">
+                    <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" aria-label="Clear search">✕</button>
                 </div>
                 <div class="filter-chips">
                     <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</button>
@@ -284,6 +280,7 @@
                         <button class="zoom-btn" onclick="zoomMap(1.2)" aria-label="Zoom in">+</button>
                         <button class="zoom-btn" onclick="zoomMap(0.8)" aria-label="Zoom out">−</button>
                         <button class="zoom-btn" onclick="resetMapZoom()" aria-label="Reset zoom">⟲</button>
+                        <button class="btn-mapper-inline admin-only-control" onclick="openRouteMapperStudioForCurrentRoute()" title="Edit route on blueprint">✏️ Edit Route</button>
                     </div>
                 </div>
 
@@ -315,6 +312,7 @@
                 </button>
                 <button class="btn-secondary" onclick="shareRoute()">📱 Share Route</button>
                 <button class="btn-secondary" onclick="callCoordinator()">📞 Call Coordinator</button>
+                <button class="btn-secondary admin-only-control" onclick="openRouteMapperStudioForCurrentRoute()" style="border-color: #FF0099; color: #FF66CC;">✏️ Edit This Route (Admin)</button>
             </div>
         </div>
     </div>
@@ -401,7 +399,10 @@
                     <h2>🗺️ Campus Floor Directory & Map</h2>
                     <p class="modal-subtitle">Official Blueprint Layout • Pradyut Parva 3</p>
                 </div>
-                <button class="close-btn" onclick="closeModal('fullMapModal')">×</button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button class="btn-mapper-tool admin-only-control" onclick="openRouteMapperStudio()" style="background: rgba(255, 0, 153, 0.25); border: 1px solid #FF0099; color: #FFFFFF;">✏️ Route Studio</button>
+                    <button class="close-btn" onclick="closeModal('fullMapModal')">×</button>
+                </div>
             </div>
             <div class="modal-body">
                 <!-- Location Indicator Bar inside Full Map Modal -->
@@ -429,6 +430,7 @@
                         <button class="zoom-btn" onclick="zoomModalMap(1.2)" aria-label="Zoom in">+</button>
                         <button class="zoom-btn" onclick="zoomModalMap(0.8)" aria-label="Zoom out">−</button>
                         <button class="zoom-btn" onclick="resetModalMapZoom()" aria-label="Reset zoom">⟲</button>
+                        <button class="btn-mapper-inline admin-only-control" onclick="openRouteMapperStudio()" title="Edit routes on blueprint">✏️ Edit Map</button>
                     </div>
                 </div>
 
@@ -459,6 +461,163 @@
         </div>
     </div>
 
+    <!-- Floating Admin Edit Map Button -->
+    <button class="admin-float-btn admin-only-control" id="adminFloatBtn" onclick="openRouteMapperStudio()" title="Route Mapper Studio (Admin)">
+        🛠️ Edit Map
+    </button>
+
+    <!-- Route Mapper Studio Modal (Admin / Developer) -->
+    <div id="routeMapperModal" class="modal">
+        <div class="modal-content mapper-modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>✏️ Visual Route Mapper Studio</h2>
+                    <p class="modal-subtitle">Creator Blueprint Studio • Plot custom visual routes across floors</p>
+                </div>
+                <div class="mapper-header-actions">
+                    <button class="btn-mapper-tool" onclick="openRouteJsonModal()">📋 Export / Import JSON</button>
+                    <button class="btn-mapper-tool" onclick="toggleAdminMode()" style="background: rgba(239, 68, 68, 0.25); border-color: #EF4444; color: #FFAAAA;" title="Lock Admin Mode">🔒 Exit Admin</button>
+                    <button class="close-btn" onclick="closeRouteMapperStudio()">×</button>
+                </div>
+            </div>
+
+            <!-- Mapper Controls Bar -->
+            <div class="mapper-controls-bar">
+                <div class="mapper-selectors-row mapper-selectors-grid">
+                    <div class="mapper-select-group">
+                        <label for="mapperStartSelect">📍 Start Point:</label>
+                        <select id="mapperStartSelect" onchange="onMapperSelectionChange()">
+                            <option value="entrance1">Main Entrance 1 (Front View / West)</option>
+                            <option value="entrance2">Entrance 2 (North Gate)</option>
+                            <option value="entrance3">Entrance 3 (South Gate / Cafe)</option>
+                            <option value="inside">Already Inside (Central Elevator)</option>
+                        </select>
+                    </div>
+                    <div class="mapper-select-group">
+                        <label for="mapperTargetSelect">🎯 Destination Event:</label>
+                        <select id="mapperTargetSelect" onchange="onMapperSelectionChange()">
+                            <!-- Rendered with all 14 pins and event names -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mapper-toolbar-row">
+                    <div class="floor-tabs mapper-floor-tabs">
+                        <button class="floor-tab active" id="mapperFloorTab0" onclick="switchMapperFloor(0)">
+                            Ground Floor <span class="tab-point-badge" id="mapperPtBadge0">0</span>
+                        </button>
+                        <button class="floor-tab" id="mapperFloorTab1" onclick="switchMapperFloor(1)">
+                            1st Floor <span class="tab-point-badge" id="mapperPtBadge1">0</span>
+                        </button>
+                        <button class="floor-tab" id="mapperFloorTab2" onclick="switchMapperFloor(2)">
+                            2nd Floor <span class="tab-point-badge" id="mapperPtBadge2">0</span>
+                        </button>
+                    </div>
+
+                    <div class="mapper-mode-toggle">
+                        <button class="mapper-mode-btn active" id="mapperModeDrawBtn" onclick="setMapperMode('draw')" title="Click or tap blueprint to add waypoints">
+                            ✏️ Add Points
+                        </button>
+                        <button class="mapper-mode-btn" id="mapperModePanBtn" onclick="setMapperMode('pan')" title="Drag canvas to pan around without adding points">
+                            ✋ Pan Map
+                        </button>
+                    </div>
+
+                    <div class="map-zoom-controls">
+                        <button class="zoom-btn" onclick="zoomMapperMap(1.25)" title="Zoom in">+</button>
+                        <button class="zoom-btn" onclick="zoomMapperMap(0.8)" title="Zoom out">−</button>
+                        <button class="zoom-btn" onclick="resetMapperMapZoom()" title="Reset zoom">⟲</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guidance Banner -->
+            <div id="mapperGuidanceBar" class="mapper-guidance-bar">
+                <span class="guidance-icon">💡</span>
+                <span id="mapperGuidanceText" class="guidance-text">Click along the yellow hallway corridors to place walking waypoints connecting the green Start to the red Destination.</span>
+            </div>
+
+            <!-- Blueprint Canvas Drawing Area -->
+            <div id="mapperCanvasWrapper" class="interactive-map-wrapper mapper-canvas-wrapper">
+                <div id="mapperCanvasContainer" class="interactive-map mapper-canvas-container">
+                    <!-- SVG injected here -->
+                </div>
+
+                <!-- Canvas Floating HUD -->
+                <div class="mapper-canvas-hud">
+                    <span id="mapperCoordHud">📍 Blueprint: --, --</span>
+                    <span id="mapperCountHud">Waypoints: 0 on this floor</span>
+                </div>
+            </div>
+
+            <!-- Action Toolbar (Undo, Clear, Pre-fill, Save, Save & Next) -->
+            <div class="mapper-actions-bar">
+                <div class="mapper-actions-left">
+                    <button class="btn-mapper-act" onclick="undoMapperWaypoint()" title="Remove last point on this floor">
+                        ↶ Undo Point
+                    </button>
+                    <button class="btn-mapper-act" onclick="clearMapperCurrentFloor()" title="Clear points on this floor">
+                        🗑️ Clear Floor
+                    </button>
+                    <button class="btn-mapper-act" onclick="prefillDefaultRouteInMapper()" title="Pre-fill standard Dijkstra corridor points so you can adjust them visually">
+                        🔄 Pre-fill Default
+                    </button>
+                    <button class="btn-mapper-act btn-revert-act" id="mapperDeleteRouteBtn" onclick="deleteCustomRoute()" title="Delete custom route and revert to default" style="display: none;">
+                        ✖️ Revert Route
+                    </button>
+                </div>
+
+                <div class="mapper-actions-right">
+                    <button class="btn-secondary" onclick="prevMapperRoute()" title="Previous event pin">
+                        ◀ Prev Pin
+                    </button>
+                    <button class="btn-primary btn-save-route" onclick="saveCustomRoute(true)" title="Save this route">
+                        💾 Save Route
+                    </button>
+                    <button class="btn-primary btn-save-next" onclick="saveAndNextMapperRoute()" title="Save current route and advance to next pin">
+                        💾 Save & Next Pin ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- All Routes Checklist Drawer -->
+            <div class="mapper-checklist-panel">
+                <div class="checklist-header" onclick="toggleMapperChecklist()">
+                    <div class="checklist-title">
+                        <span>📋 All Routes Checklist (Start: <strong id="checklistEntranceName">Main Entrance 1</strong>)</span>
+                        <span id="checklistProgressBadge" class="checklist-badge">0 / 14 Mapped</span>
+                    </div>
+                    <button class="checklist-toggle-btn" id="checklistToggleBtn">▼ View All 14 Event Routes</button>
+                </div>
+                <div id="mapperChecklistGrid" class="checklist-grid" style="display: none;">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSON Export / Import Modal -->
+    <div id="routeJsonModal" class="modal">
+        <div class="modal-content json-modal-content">
+            <div class="modal-header">
+                <h2>📋 Custom Routes Data (JSON)</h2>
+                <button class="close-btn" onclick="closeRouteJsonModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-light-blue); margin-bottom: 12px;">
+                    This JSON contains all the custom visual routes you have plotted and saved. You can copy it, download it, or paste previously exported JSON to restore your routes.
+                </p>
+                <textarea id="routeJsonTextarea" class="json-textarea" rows="12" spellcheck="false" placeholder="{ ... }"></textarea>
+                <div class="json-actions-row">
+                    <button class="btn-primary" onclick="copyRoutesJson()">📋 Copy JSON</button>
+                    <button class="btn-secondary" onclick="downloadRoutesJson()">💾 Download .json</button>
+                    <button class="btn-secondary" onclick="importRoutesJson()">📥 Import & Apply JSON</button>
+                    <button class="btn-danger-link" onclick="clearAllCustomRoutes()">🗑️ Clear All Custom</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading Spinner -->
     <div id="loader" class="loader-overlay">
         <div class="loader-spinner"></div>
@@ -470,6 +629,6 @@
     <!-- Scripts -->
     <script src="data.js?v=12"></script>
     <script src="navigation-graph.js?v=12"></script>
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=17"></script>
 </body>
 </html>

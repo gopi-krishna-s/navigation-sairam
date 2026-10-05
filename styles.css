@@ -480,26 +480,7 @@ body::before {
   margin-bottom: 20px;
 }
 
-#eventSearch {
-  width: 100%;
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid var(--border-cyan);
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-white);
-  font-size: 16px;
-  margin-bottom: 15px;
-}
 
-#eventSearch::placeholder {
-  color: var(--text-light-gray);
-}
-
-#eventSearch:focus {
-  outline: none;
-  border-color: var(--badge-cyan);
-  box-shadow: 0 0 15px var(--glow-cyan);
-}
 
 .filter-chips {
   display: flex;
@@ -1753,50 +1734,99 @@ body::before {
   margin-left: 4px;
 }
 
-/* Location banner bar */
-.location-banner-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(0, 51, 102, 0.35);
-  border: 1px solid rgba(0, 212, 255, 0.25);
-  border-radius: 12px;
-  padding: 10px 16px;
-  margin-bottom: 16px;
-  font-size: 13px;
+/* Modern Search Bar */
+.search-filter-bar {
+  margin-bottom: 22px;
 }
 
-/* Search Box with icon */
 .search-input-wrapper {
   position: relative;
-  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  background: rgba(10, 26, 47, 0.75);
+  border: 1.5px solid rgba(0, 212, 255, 0.35);
+  border-radius: 14px;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.search-input-wrapper:hover {
+  border-color: rgba(0, 212, 255, 0.65);
+  box-shadow: 0 6px 24px rgba(0, 212, 255, 0.15);
+}
+
+.search-input-wrapper:focus-within {
+  border-color: var(--badge-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2), 0 8px 30px rgba(0, 212, 255, 0.25);
+  background: rgba(10, 26, 47, 0.95);
 }
 
 .search-input-wrapper .search-icon {
   position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
+  left: 16px;
+  font-size: 18px;
   pointer-events: none;
-  opacity: 0.7;
+  color: var(--badge-cyan);
+  opacity: 0.85;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .search-input-wrapper input {
   width: 100%;
-  padding: 14px 14px 14px 44px;
-  border-radius: 12px;
-  border: 2px solid rgba(0, 212, 255, 0.3);
-  background: rgba(10, 22, 40, 0.75);
+  padding: 14px 46px 14px 48px;
+  background: transparent;
+  border: none;
+  outline: none;
   color: #FFFFFF;
   font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.search-input-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8);
   transition: all 0.2s ease;
 }
 
-.search-input-wrapper input:focus {
-  outline: none;
-  border-color: var(--badge-cyan);
-  box-shadow: 0 0 15px var(--glow-cyan);
+.search-clear-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.search-clear-btn:hover {
+  background: rgba(255, 0, 153, 0.4);
+  color: #FFFFFF;
+  transform: scale(1.1);
 }
 
 /* Event List Card Upgrades */
@@ -2939,6 +2969,503 @@ body::before {
 .user-loc-change-btn:hover {
   background: #00D4FF;
   color: #050B14;
+}
+
+/* =========================================================================
+   ROUTE MAPPER STUDIO (ADMIN ONLY) STYLES
+   ========================================================================= */
+
+/* Admin-only control visibility: hidden by default for users, visible when admin active */
+.admin-only-control {
+  display: none !important;
+}
+
+body.admin-mode-active .admin-only-control {
+  display: flex !important;
+}
+
+body.admin-mode-active button.admin-only-control,
+body.admin-mode-active a.admin-only-control {
+  display: inline-flex !important;
+}
+
+.btn-mapper-inline {
+  background: rgba(255, 0, 153, 0.3) !important;
+  border: 1.5px solid #FF0099 !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  padding: 0 12px !important;
+  height: 36px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-mapper-inline:hover {
+  background: #FF0099 !important;
+  box-shadow: 0 0 15px rgba(255, 0, 153, 0.6) !important;
+  transform: translateY(-1px);
+}
+
+/* Floating Admin Mode Button */
+.admin-float-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: linear-gradient(135deg, #FF0099 0%, #7928CA 100%);
+  color: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 6px 25px rgba(255, 0, 153, 0.5), 0 0 15px rgba(121, 40, 202, 0.4);
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.admin-float-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(255, 0, 153, 0.7);
+}
+
+.mapper-modal-content {
+  max-width: 1050px;
+  width: 96vw;
+  max-height: 94vh;
+  padding: 18px 22px;
+}
+
+.mapper-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-mapper-tool {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  color: #00D4FF;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-mapper-tool:hover {
+  background: #00D4FF;
+  color: #050B14;
+}
+
+/* Controls Bar */
+.mapper-controls-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.mapper-selectors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .mapper-selectors-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mapper-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mapper-select-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #00D4FF;
+}
+
+.mapper-select-group select {
+  background: #0D1B2A;
+  color: #FFFFFF;
+  border: 1.5px solid rgba(0, 212, 255, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.mapper-select-group select:focus {
+  border-color: #00D4FF;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.mapper-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mapper-floor-tabs .floor-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-point-badge {
+  background: rgba(0, 212, 255, 0.25);
+  color: #00D4FF;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 212, 255, 0.4);
+}
+
+.mapper-mode-toggle {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.mapper-mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-light-blue);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mapper-mode-btn.active {
+  background: #00D4FF;
+  color: #050B14;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+}
+
+/* Guidance Banner */
+.mapper-guidance-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.12), rgba(0, 212, 255, 0.12));
+  border-left: 4px solid #EAB308;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  color: #FEF08A;
+}
+
+.guidance-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.guidance-text {
+  flex: 1;
+}
+
+/* Canvas Wrapper */
+.mapper-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #FFFFFF !important;
+  border-radius: 12px;
+  border: 2px solid #00D4FF;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.08), 0 6px 24px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  touch-action: none;
+}
+
+.mapper-canvas-container {
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 0.04s linear;
+}
+
+.mapper-canvas-container svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mapper-canvas-hud {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 10;
+  background: rgba(10, 22, 40, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #00D4FF;
+  pointer-events: none;
+}
+
+/* Action Toolbar */
+.mapper-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.mapper-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mapper-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-mapper-act {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-mapper-act:hover {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: #00D4FF;
+  color: #00D4FF;
+}
+
+.btn-revert-act {
+  color: #F87171 !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.btn-revert-act:hover {
+  background: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-save-route {
+  background: linear-gradient(135deg, #16A34A 0%, #15803D 100%) !important;
+  border: 1.5px solid #22C55E !important;
+  color: #FFFFFF !important;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.35);
+}
+
+.btn-save-next {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  border: 1.5px solid #38BDF8 !important;
+  color: #FFFFFF !important;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4);
+}
+
+/* Checklist Panel */
+.mapper-checklist-panel {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.checklist-header:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.checklist-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.checklist-badge {
+  background: rgba(0, 212, 255, 0.2);
+  color: #00D4FF;
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.checklist-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-light-blue);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.checklist-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 51, 102, 0.25);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checklist-card:hover {
+  background: rgba(0, 102, 204, 0.35);
+  border-color: #00D4FF;
+  transform: translateY(-1px);
+}
+
+.checklist-card.active-target {
+  background: rgba(0, 212, 255, 0.25);
+  border: 1.5px solid #00D4FF;
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+}
+
+.checklist-pin {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #FF5722;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.checklist-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.checklist-info h5 {
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checklist-info p {
+  font-size: 10px;
+  color: var(--text-light-blue);
+  margin: 0;
+}
+
+.checklist-status {
+  font-size: 14px;
+}
+
+/* JSON Modal */
+.json-modal-content {
+  max-width: 680px;
+}
+
+.json-textarea {
+  width: 100%;
+  background: #050B14;
+  color: #00FF66;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 8px;
+  padding: 12px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.json-actions-row {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-danger-link {
+  background: transparent;
+  border: none;
+  color: #EF4444;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: auto;
+  text-decoration: underline;
+}
+
+.btn-danger-link:hover {
+  color: #F87171;
 }
 
 

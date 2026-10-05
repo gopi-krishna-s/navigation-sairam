@@ -1,7 +1,7 @@
 // Service Worker for IEEE Day 2026 PWA
 // Enables offline functionality
 
-const CACHE_NAME = 'ieee-day-2026-v18';
+const CACHE_NAME = 'ieee-day-2026-v22';
 const urlsToCache = [
   '/',
   '/index.html',
