@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="IEEE Day 2026 - Pradyut Parva 3 Event Navigation">
+    <meta name="theme-color" content="#0A1628">
+    <title>IEEE Day 2026 - Pradyut Parva 3 | Event Navigation</title>
+    <link rel="stylesheet" href="styles.css?v=21">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <!-- Screen 1: Welcome / Greeting Screen -->
+    <div id="welcomeScreen" class="screen active">
+        <div class="hero-section">
+            <div class="logo-container">
+                <div class="ieee-logo">IEEE DAY 2026</div>
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">PRADYUT PARVA 3</span>
+            </h1>
+            <p class="tagline">Ignite | Innovate | Impact</p>
+            <p class="event-date">October 7-8, 2026</p>
+            <div class="event-stats">
+                <div class="stat-item">
+                    <span class="stat-number">14</span>
+                    <span class="stat-label">Events</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Floors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Days</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="greeting-cta-card">
+            <div class="cta-glow"></div>
+            <h2 class="greeting-heading">Welcome, Innovator! ⚡</h2>
+            <p class="greeting-text">Discover thrilling hackathons, robotics, circuit challenges, and creative competitions across campus.</p>
+            <button class="btn-primary btn-explore" onclick="exploreEvents()">
+                <span>Explore Events</span>
+                <span class="btn-icon">→</span>
+            </button>
+            <div class="greeting-shortcuts">
+                <button class="chip-shortcut" onclick="showFullMap()">🗺️ Campus Map</button>
+                <button class="chip-shortcut" onclick="showMySchedule()">⭐ My Schedule</button>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <button class="quick-link-btn" onclick="showHelp()">👥 Student Coordinators</button>
+            <button class="quick-link-btn" onclick="showLostHelper()">🆘 I'm Lost</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Category Selection ("Choose Your Event Type") -->
+    <div id="categoryScreen" class="screen">
+        <div class="header-bar">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">←</button>
+            <div class="header-center-title">Event Explorer</div>
+            <button class="home-btn" onclick="showScreen('welcomeScreen')" aria-label="Home">🏠</button>
+        </div>
+
+        <div class="container category-container">
+            <div class="category-header-text">
+                <h2 class="page-title gradient-heading">What would you like to explore?</h2>
+                <p class="section-subtitle">Pick an event track to view schedules, venues, and get turn-by-turn directions</p>
+            </div>
+
+            <div class="category-cards-grid">
+                <!-- Technical Category Card -->
+                <div class="category-card tech-card" onclick="selectCategory('technical')">
+                    <div class="category-badge-pill" id="techCountBadge">8 Events</div>
+                    <div class="category-icon-wrapper">
+                        <span class="category-large-icon">💻</span>
+                    </div>
+                    <div class="category-card-content">
+                        <h3 class="category-card-title">Technical Events</h3>
+                        <p class="category-card-subtext">Coding, circuits, robotics, and more</p>
+                        <div class="category-tags">
+                            <span>Hackathon</span>
+                            <span>Robo Race</span>
+                            <span>Webathon</span>
+                            <span>Debugging</span>
+                        </div>
+                    </div>
+                    <div class="category-card-action">
+                        <span class="action-label">Explore Track</span>
+                        <span class="action-arrow">→</span>
+                    </div>
+                </div>
+
+                <!-- Non-Technical Category Card -->
+                <div class="category-card nontech-card" onclick="selectCategory('non-technical')">
+                    <div class="category-badge-pill" id="nontechCountBadge">6 Events</div>
+                    <div class="category-icon-wrapper">
+                        <span class="category-large-icon">🎭</span>
+                    </div>
+                    <div class="category-card-content">
+                        <h3 class="category-card-title">Non-Technical Events</h3>
+                        <p class="category-card-subtext">Fun, creativity, and teamwork</p>
+                        <div class="category-tags">
+                            <span>Treasure Hunt</span>
+                            <span>Prompt War</span>
+                            <span>Gaming</span>
+                            <span>Photography</span>
+                        </div>
+                    </div>
+                    <div class="category-card-action">
+                        <span class="action-label">Explore Track</span>
+                        <span class="action-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 3: Event List View -->
+    <div id="eventListScreen" class="screen">
+        <div class="header-bar">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">←</button>
+            <div class="active-category-pill" onclick="showScreen('categoryScreen')">
+                <span id="categoryPillIcon">💻</span>
+                <span id="categoryPillText">Technical</span>
+                <span class="pill-change">Switch</span>
+            </div>
+            <button class="home-btn" onclick="showScreen('welcomeScreen')" aria-label="Home">🏠</button>
+        </div>
+
+        <div class="container">
+            <div class="location-banner-bar">
+                <span id="currentLocationText">📍 Location: Not set yet</span>
+                <button class="change-location-btn" onclick="changeLocation()">Change</button>
+            </div>
+
+            <div class="search-filter-bar">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="eventSearch" placeholder="Search events by title, room, or dept..." oninput="filterEvents()">
+                </div>
+                <div class="filter-chips">
+                    <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</button>
+                    <button class="filter-chip" data-filter="day1" onclick="setFilter('day1')">Day 1 (Oct 7)</button>
+                    <button class="filter-chip" data-filter="day2" onclick="setFilter('day2')">Day 2 (Oct 8)</button>
+                </div>
+            </div>
+
+            <!-- List of events -->
+            <div id="categoryEventsList" class="events-container"></div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Event Details View -->
+    <div id="eventDetailScreen" class="screen">
+        <div class="header-bar">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">←</button>
+            <div class="header-center-title">Event Details</div>
+            <button class="home-btn" onclick="showScreen('welcomeScreen')" aria-label="Home">🏠</button>
+        </div>
+
+        <div class="container">
+            <div id="eventDetailCard" class="event-detail-card">
+                <!-- Rendered dynamically by app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 5: "Where are you right now?" Location Selection Screen -->
+    <div id="locationScreen" class="screen">
+        <div class="header-bar">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">←</button>
+            <div class="header-center-title">Select Location</div>
+            <button class="home-btn" onclick="showScreen('welcomeScreen')" aria-label="Home">🏠</button>
+        </div>
+
+        <div class="container location-selection-container">
+            <div class="location-header-text">
+                <h2 class="page-title gradient-heading">Where are you right now?</h2>
+                <p class="section-subtitle">
+                    Select your current location so we can find the fastest route to 
+                    <strong id="locationTargetEventName" class="highlight-text">your event</strong>
+                </p>
+            </div>
+
+            <div class="entrance-grid">
+                <button class="entrance-card" onclick="selectLocation('entrance1')">
+                    <div class="entrance-icon">🚪</div>
+                    <div class="entrance-info">
+                        <h3>Main Entrance 1</h3>
+                        <p>Front gate - Primary entrance</p>
+                    </div>
+                    <div class="entrance-arrow">→</div>
+                </button>
+                
+                <button class="entrance-card" onclick="selectLocation('entrance3')">
+                    <div class="entrance-icon">🚪</div>
+                    <div class="entrance-info">
+                        <h3>Left Side Entrance</h3>
+                        <p>Entrance 3 - Physics Lab</p>
+                    </div>
+                    <div class="entrance-arrow">→</div>
+                </button>
+
+                <button class="entrance-card" onclick="selectLocation('entrance2')">
+                    <div class="entrance-icon">🚪</div>
+                    <div class="entrance-info">
+                        <h3>Right Side Entrance</h3>
+                        <p>Entrance 2 - Near Cafe</p>
+                    </div>
+                    <div class="entrance-arrow">→</div>
+                </button>
+                
+                <button class="entrance-card" onclick="selectLocation('inside')">
+                    <div class="entrance-icon">🏢</div>
+                    <div class="entrance-info">
+                        <h3>Already Inside</h3>
+                        <p>Central Elevator / Foyer</p>
+                    </div>
+                    <div class="entrance-arrow">→</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 6: Navigation & Shortest Route Screen -->
+    <div id="navigationScreen" class="screen">
+        <div class="header-bar">
+            <button class="back-btn" onclick="goBack()" aria-label="Back">←</button>
+            <div class="event-header">
+                <h2 id="navEventTitle">Event Name</h2>
+                <p id="navEventLocation">Ground Floor • Seminar Hall 124</p>
+            </div>
+            <button class="home-btn" onclick="showScreen('welcomeScreen')" aria-label="Home">🏠</button>
+        </div>
+
+        <div class="container">
+            <div class="location-info-card">
+                <div class="location-from">
+                    <strong>📍 From:</strong>
+                    <span id="navFromLocation">Main Entrance 1</span>
+                    <button class="change-btn" onclick="changeLocation()">Change</button>
+                </div>
+                <div class="location-to">
+                    <strong>🎯 Destination:</strong>
+                    <span id="navToLocation">Seminar Hall 124</span>
+                </div>
+            </div>
+
+            <!-- Route Stats Card -->
+            <div class="route-metrics-card">
+                <div class="route-stat">
+                    <span class="route-icon">⏱️</span>
+                    <span id="routeDuration" class="stat-highlight">About 2 min walk</span>
+                </div>
+                <div class="route-stat">
+                    <span class="route-icon">📏</span>
+                    <span id="routeDistance">45 meters</span>
+                </div>
+                <div class="route-stat">
+                    <span class="route-icon" id="routeMethodIcon">🚀</span>
+                    <span id="routeMethod">Fastest Route</span>
+                </div>
+            </div>
+
+            <!-- Multi-Floor Interactive Map -->
+            <div class="map-container">
+                <div class="floor-tabs-bar">
+                    <div class="floor-tabs">
+                        <button class="floor-tab active" id="floorTab0" onclick="switchFloor(0)">
+                            Ground Floor <span class="tab-dot" id="dotFloor0"></span>
+                        </button>
+                        <button class="floor-tab" id="floorTab1" onclick="switchFloor(1)">
+                            1st Floor <span class="tab-dot" id="dotFloor1"></span>
+                        </button>
+                        <button class="floor-tab" id="floorTab2" onclick="switchFloor(2)">
+                            2nd Floor <span class="tab-dot" id="dotFloor2"></span>
+                        </button>
+                    </div>
+                    <div class="map-zoom-controls">
+                        <button class="zoom-btn" onclick="zoomMap(1.2)" aria-label="Zoom in">+</button>
+                        <button class="zoom-btn" onclick="zoomMap(0.8)" aria-label="Zoom out">−</button>
+                        <button class="zoom-btn" onclick="resetMapZoom()" aria-label="Reset zoom">⟲</button>
+                    </div>
+                </div>
+
+                <div id="interactiveMapWrapper" class="interactive-map-wrapper">
+                    <div id="interactiveMap" class="interactive-map">
+                        <!-- SVG map rendered here by app.js -->
+                    </div>
+                </div>
+
+                <div class="map-legend">
+                    <div class="legend-item"><span class="marker green-marker"></span> Start Entrance</div>
+                    <div class="legend-item"><span class="marker pink-marker"></span> Destination Room</div>
+                    <div class="legend-item"><span class="path-line"></span> Walking Route</div>
+                </div>
+            </div>
+
+            <!-- Turn-by-Turn Directions -->
+            <div class="directions-card">
+                <h3>Step-by-Step Directions</h3>
+                <div id="directionsList" class="directions-list"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="route-action-buttons">
+                <button class="btn-primary" onclick="changeLocation()">📍 Change Location</button>
+                <button class="btn-secondary" onclick="showScreen('eventListScreen')">📅 Choose Another Event</button>
+                <button class="btn-secondary" onclick="toggleSaveCurrentEvent()">
+                    <span id="routeFavStar">⭐</span> Save to Favourites
+                </button>
+                <button class="btn-secondary" onclick="shareRoute()">📱 Share Route</button>
+                <button class="btn-secondary" onclick="callCoordinator()">📞 Call Coordinator</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Student Coordinators Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👥 Student Coordinators</h2>
+                <button class="close-btn" onclick="closeModal('helpModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="coordinator-section">
+                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 14px;">Feel free to contact our student coordinators for any event queries or guidance.</p>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span>Mr. Santosh (ECE)</span>
+                            <a href="tel:9380147054" class="call-btn">9380147054</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>Ms. Shreethikha (ECE)</span>
+                            <a href="tel:8095284849" class="call-btn">8095284849</a>
+                        </div>
+                        <div class="contact-item">
+                            <span>Mr. Pradish (CSE)</span>
+                            <a href="tel:998659257" class="call-btn">998659257</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-emergency" onclick="showLostHelper()">
+                    🆘 I'M LOST - HELP ME!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- I'm Lost Helper Modal -->
+    <div id="lostModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🆘 Don't Worry, We'll Help!</h2>
+                <button class="close-btn" onclick="closeModal('lostModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>What do you see around you?</strong></p>
+                <div class="landmark-options">
+                    <button class="landmark-btn" onclick="foundLandmark('cafe')">☕ Cafe</button>
+                    <button class="landmark-btn" onclick="foundLandmark('library')">📚 Library</button>
+                    <button class="landmark-btn" onclick="foundLandmark('eee-lab')">🔧 EEE Lab</button>
+                    <button class="landmark-btn" onclick="foundLandmark('seminar')">🎤 Seminar Hall 124</button>
+                    <button class="landmark-btn" onclick="foundLandmark('lift')">🛗 Lift</button>
+                    <button class="landmark-btn" onclick="foundLandmark('none')">❌ None of these</button>
+                </div>
+                <div class="help-actions">
+                    <button class="btn-primary" onclick="callVolunteer()">📞 Call Volunteer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Schedule / Favourites Modal -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⭐ My Favourites & Schedule</h2>
+                <button class="close-btn" onclick="closeModal('scheduleModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="scheduleList" class="schedule-list"></div>
+                <div class="schedule-actions">
+                    <button class="btn-secondary" onclick="shareSchedule()">📱 Share Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Campus Map Modal -->
+    <div id="fullMapModal" class="modal">
+        <div class="modal-content map-modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2>🗺️ Campus Floor Directory & Map</h2>
+                    <p class="modal-subtitle">Official Blueprint Layout • Pradyut Parva 3</p>
+                </div>
+                <button class="close-btn" onclick="closeModal('fullMapModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Location Indicator Bar inside Full Map Modal -->
+                <div id="modalUserLocationBar" class="modal-user-loc-bar">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="user-loc-pin">📍</span>
+                        <span id="modalUserLocText" class="user-loc-text">Current Location: <strong>Main Entrance 1</strong> (Ground Floor)</span>
+                    </div>
+                    <button class="user-loc-change-btn" onclick="showLostHelper()">Change / I'm Lost</button>
+                </div>
+
+                <div class="floor-tabs-bar">
+                    <div class="floor-tabs">
+                        <button class="floor-tab active" id="modalFloorTab0" onclick="switchModalFloor(0)">
+                            Ground Floor <span class="tab-badge">Pins 1–4</span>
+                        </button>
+                        <button class="floor-tab" id="modalFloorTab1" onclick="switchModalFloor(1)">
+                            1st Floor <span class="tab-badge">Pins 5–8</span>
+                        </button>
+                        <button class="floor-tab" id="modalFloorTab2" onclick="switchModalFloor(2)">
+                            2nd Floor <span class="tab-badge">Pins 9–14</span>
+                        </button>
+                    </div>
+                    <div class="map-zoom-controls">
+                        <button class="zoom-btn" onclick="zoomModalMap(1.2)" aria-label="Zoom in">+</button>
+                        <button class="zoom-btn" onclick="zoomModalMap(0.8)" aria-label="Zoom out">−</button>
+                        <button class="zoom-btn" onclick="resetModalMapZoom()" aria-label="Reset zoom">⟲</button>
+                    </div>
+                </div>
+
+                <div id="modalFloorSummary" class="modal-floor-summary"></div>
+
+                <div class="blueprint-legend-bar">
+                    <div class="legend-badge"><span class="legend-pin-sample">1</span> Event Venue (Pins 1–14)</div>
+                    <div class="legend-badge"><span class="legend-path-sample"></span> Pathways</div>
+                    <div class="legend-badge"><span class="legend-icon-sample">🛗</span> Central LIFT</div>
+                    <div class="legend-badge"><span class="legend-icon-sample">🪜</span> Stairs (NW, NE, SW, SE)</div>
+                    <div class="legend-badge"><span class="legend-icon-sample">🚻</span> Restrooms</div>
+                    <div class="legend-badge"><span class="legend-icon-sample">🚪</span> Gates (1, 2, 3)</div>
+                </div>
+
+                <div id="modalInteractiveMapWrapper" class="interactive-map-wrapper blueprint-modal-wrapper">
+                    <div id="modalInteractiveMap" class="interactive-map"></div>
+                </div>
+
+                <!-- Tapped Pin Quick Info Card -->
+                <div id="modalSelectedPinBox" class="modal-pin-box" style="display: none;"></div>
+
+                <!-- Events on this Floor -->
+                <div class="modal-floor-events">
+                    <h3 class="modal-floor-events-heading">Events on this Floor</h3>
+                    <div id="modalFloorEventsList" class="modal-floor-events-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loader" class="loader-overlay">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="data.js?v=12"></script>
+    <script src="navigation-graph.js?v=12"></script>
+    <script src="app.js?v=14"></script>
+</body>
+</html>
