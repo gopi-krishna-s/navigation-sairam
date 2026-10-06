@@ -172,8 +172,8 @@ This project is created for IEEE Day 2026 at Sri Sairam College of Engineering.
 
 **Student Coordinators:**
 - Mr. Santosh (ECE): 9380147054
-- Ms. Shreethikha (ECE): 8095284849
-- Mr. Pradish (CSE): 998659257
+- Ms. Sreehitha (ECE): 8095284849
+- Mr. Pradish (CSE): 9986592571
 
 ---
 

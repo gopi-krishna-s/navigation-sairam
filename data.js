@@ -263,7 +263,7 @@ const eventsData = {
       },
       teamLeader: {
         name: "Pradish",
-        contact: "9386592571"
+        contact: "9986592571"
       },
       coordinates: { x: 1230, y: 854, floor: 1 },
       icon: "🔗"
@@ -566,7 +566,7 @@ const eventsData = {
     { name: "Rohit", dept: "ISE", contact: "7397190780" },
     { name: "Anaya Sha", dept: "EEE", contact: "9164967099" },
     { name: "Kavya", dept: "AI/ML", contact: "7892280126" },
-    { name: "Pradish", dept: "CSE", contact: "9386592571" },
+    { name: "Pradish", dept: "CSE", contact: "9986592571" },
     { name: "Amith Jose C", dept: "Media", contact: "8748093450" },
     { name: "Deekshana N S", dept: "AI/ML", contact: "9945434968" },
     { name: "Shreya S", dept: "CSE", contact: "8904796886" }

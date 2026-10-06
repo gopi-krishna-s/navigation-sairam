@@ -88,7 +88,6 @@ function initializeApp() {
   updateCategoryBadges();
   updateLocationDisplay();
   updateBottomNavActive('welcomeScreen');
-  initAdminMode();
 
   // Handle URL parameters (e.g. shared route links)
   const params = new URLSearchParams(window.location.search);
@@ -99,71 +98,6 @@ function initializeApp() {
     appState.selectedLocation = fromLocation;
     appState.selectedEvent = parseInt(eventId, 10);
     showScreen('navigationScreen');
-  }
-}
-
-// Admin Mode Management (Map Edit Access for Creator Only)
-function initAdminMode() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const hash = window.location.hash.toLowerCase();
-  
-  if (urlParams.get('admin') === 'true' || urlParams.get('admin') === '1' || urlParams.get('edit') === '1' || hash === '#admin' || hash === '#edit') {
-    localStorage.setItem('ieee_admin_mode', 'true');
-  }
-
-  // Auto-enable on localhost if not explicitly set to false
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '';
-  if (isLocalhost && localStorage.getItem('ieee_admin_mode') === null) {
-    localStorage.setItem('ieee_admin_mode', 'true');
-  }
-
-  const isAdmin = localStorage.getItem('ieee_admin_mode') === 'true';
-  document.body.classList.toggle('admin-mode-active', isAdmin);
-
-  // Secret keyboard shortcut: Ctrl+Shift+E or Ctrl+Alt+M
-  document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) ||
-        (e.ctrlKey && e.altKey && (e.key === 'M' || e.key === 'm'))) {
-      e.preventDefault();
-      toggleAdminMode();
-    }
-  });
-
-  // Secret triple-tap on hero title or logo
-  const logo = document.querySelector('.logo-container') || document.querySelector('.hero-title') || document.querySelector('.hero-section');
-  if (logo) {
-    let clickCount = 0;
-    let clickTimer = null;
-    logo.addEventListener('click', () => {
-      clickCount++;
-      clearTimeout(clickTimer);
-      if (clickCount >= 3) {
-        clickCount = 0;
-        toggleAdminMode();
-      } else {
-        clickTimer = setTimeout(() => { clickCount = 0; }, 600);
-      }
-    });
-  }
-
-  // Expose global debug / helper shortcuts
-  window.openRouteMapperStudio = openRouteMapperStudio;
-  window.toggleAdminMode = toggleAdminMode;
-}
-
-function toggleAdminMode() {
-  const currentlyAdmin = localStorage.getItem('ieee_admin_mode') === 'true';
-  const newAdmin = !currentlyAdmin;
-  if (newAdmin) {
-    localStorage.setItem('ieee_admin_mode', 'true');
-    document.body.classList.add('admin-mode-active');
-    showToast('🛠️ Admin Mode Enabled (Route Mapper Studio Unlocked)');
-    openRouteMapperStudio();
-  } else {
-    localStorage.setItem('ieee_admin_mode', 'false');
-    document.body.classList.remove('admin-mode-active');
-    showToast('🔒 Admin Mode Disabled');
-    closeRouteMapperStudio();
   }
 }
 
